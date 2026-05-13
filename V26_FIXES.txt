@@ -1,0 +1,16 @@
+Dux Notes v26 fixes
+
+Priority fixes included:
+- Rebased from the stable v24 Mac app line to avoid the blank-screen issue from v25.
+- Added a React startup error boundary so a bad saved setting shows a recovery screen instead of a blank app.
+- Added collapsible sidebar.
+- Added Eraser modes:
+  - Pixel eraser: removes parts of pen/highlighter strokes.
+  - Object eraser: removes whole strokes, text boxes, images, and shapes.
+- Added Reset schedule button in the Study schedule modal to clear all study blocks and timings.
+- Hardened image insertion so pasted/dragged images attach to the correct current page and switch to Select mode after insert.
+- Fixed missing TypeScript helper functions so the project type-checks.
+
+Build checks run:
+- npx tsc --noEmit
+- npm run build

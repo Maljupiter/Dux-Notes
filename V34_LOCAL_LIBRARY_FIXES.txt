@@ -1,0 +1,8 @@
+Dux Notes v34 local library recovery fix
+
+Targeted fix only:
+- Hardened the Electron local library loader.
+- If the desktop app finds a blank, corrupted or unreadable library.json, it now backs it up and creates a clean empty library instead of leaving the app stuck with 'Could not load local library'.
+- Import PDF and Create PDF paths from the previous v34 import/create fix are preserved.
+
+No UI, canvas, PDF rendering, drawing, zoom, AI, flashcard, study schedule, theme or toolbar logic was changed.

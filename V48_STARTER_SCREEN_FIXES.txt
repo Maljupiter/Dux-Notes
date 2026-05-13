@@ -1,0 +1,6 @@
+V48 starter screen visual fix
+
+- Fixed the empty starter workspace so the welcome card sits in the true centre of the workspace.
+- Removed the stray lighter lower panel/strip visible on the starter screen.
+- Kept the floating bottom dock, time/tip controls and right-side tool rail unchanged.
+- Did not touch drawing, tools, PDF import/create, Dux AI, flashcards, study schedule, notebook storage or iPad touch logic.

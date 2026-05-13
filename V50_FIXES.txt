@@ -1,0 +1,7 @@
+Dux Notes v50 targeted fixes
+
+- Fixed inserted space cutting through pen/highlighter strokes by splitting strokes at the inserted space line instead of stretching them across the gap.
+- Fixed inserting space inside an existing inserted space by preserving spacer order and allowing the new space to be placed within the existing gap.
+- Made the secondary tool settings panel fade while actively writing/highlighting so it gets out of the way without changing tool behaviour.
+- Added a Help button beside Settings with a full app guide covering tools, page controls, iPad gestures, Dux AI, flashcards, study schedule, Scratch and tips.
+- Did not change PDF import/create, drawing tools, Dux AI backend, flashcards, study schedule logic, storage, themes, starter screen, right toolbar, or bottom dock.

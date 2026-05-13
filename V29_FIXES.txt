@@ -1,0 +1,5 @@
+V29 fixes
+- Raised modal backdrop layering so Flashcards, Study Schedule and other overlays blur and block the toolbar, More menu, colour pickers and sidebar collapse button.
+- Refactored the bottom bar into left status, centre workspace mode and right controls.
+- Made the secondary tool settings bar collapsible by clicking the active tool again, with a smooth upward collapse.
+- Added live cursor size feedback for pen, highlighter and eraser tools.

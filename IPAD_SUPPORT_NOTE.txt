@@ -1,0 +1,9 @@
+Dux Notes iPad note
+
+The Mac .app version cannot run directly on iPad because iPadOS does not run Electron desktop apps.
+
+The realistic paths are:
+1. Browser/PWA version hosted online for iPad Safari, with browser storage and file import/export limitations.
+2. Proper native iPad app using Capacitor or a React Native rewrite, then signing through Apple Developer.
+
+This v26 build keeps the desktop app stable first. The next iPad step should be a dedicated browser/PWA build that replaces the Electron file access with browser-safe storage and export flows.

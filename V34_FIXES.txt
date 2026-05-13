@@ -1,0 +1,10 @@
+Dux Notes v34 targeted fixes
+
+- Polished the lightbulb quick-tip popup so it appears as a floating card above the bottom-bar lightbulb button.
+- The popup now uses theme variables only, with proper spacing, border, rounded card styling and subtle fade/scale animation.
+- Popup actions stay small and clean: Next tip, Ask Dux AI and Plan study.
+- Opening the tip popup closes the Dux AI panel, and opening Dux AI closes the tip popup.
+- Raised modal overlay layering so the bottom bar is blurred/covered during settings, flashcards, study schedule and other modal overlays.
+- Removed the old schedule-generator key/settings messaging from the Settings screen and study planner text.
+- Strengthened Dux AI for greetings, topic run-throughs, common general questions, GeoGuessr, vector magnitude, simple derivatives and simple integrals such as integral of x.
+- No PDF rendering, canvas rendering, drawing engine, zoom logic, notebook storage or toolbar systems were changed.

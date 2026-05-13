@@ -1,0 +1,7 @@
+V42 iPad and UI fixes
+- Kept v41 as the base.
+- Raised the document label menu above the top utility toolbar so it no longer sits under the toolbar.
+- Added a compact Blank page action to the bottom utility bar.
+- Added iPad-focused touch handling: touch/palm contact no longer creates ink marks, while Apple Pencil/pen and mouse input still write normally.
+- Added two-finger page panning on the canvas for iPad/tablet use without changing laptop trackpad/mouse scrolling.
+- Did not change PDF import/export, drawing tools, pen rendering, AI backend, flashcards, study schedule logic, themes, notebook storage or existing Mac app behaviour outside the requested fixes.
