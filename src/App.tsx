@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, CSSProperties, DragEvent as ReactDragEvent, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent, ReactNode, TouchEvent as ReactTouchEvent } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { PDFDocument } from 'pdf-lib';
 import type {
@@ -12553,6 +12554,7 @@ Offline note: I could not reach the Gemini backend, so I used the built-in Dux A
           </div>
         </div>
       )}
+      <Analytics />
     </div>
   );
 }
