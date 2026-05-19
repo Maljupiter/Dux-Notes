@@ -1,0 +1,24 @@
+Dux Notes v56 targeted fixes
+
+Base: v55
+
+Changed only the requested areas:
+- Blank page button now opens a page type picker for Ruled, Grid and Plain pages.
+- Current page can rotate between portrait and landscape from More > Rotate page.
+- Added editable Contents panel beside Help.
+- Contents panel supports page titles, bookmarks and direct page jumping.
+- Page thumbnails show a bookmark star and support right-click delete.
+- Page surface also supports right-click page delete with confirmation.
+- Laptop trackpad pinch zoom is supported through ctrl/meta wheel zoom handling.
+- iPad two-finger gesture threshold was made less twitchy so normal panning is less likely to turn into accidental zoom.
+- Text boxes can now have a fill after creation: Transparent, White, Black, or Paper colour.
+- Selected PNG/image boxes can be rotated 90 degrees at a time.
+
+Not intentionally changed:
+- PDF import/create paths
+- Core pen/highlighter/eraser behaviour
+- Dux AI backend
+- Flashcard generation logic
+- Study schedule UI layout
+- Storage format beyond optional page titles/bookmarks/text fill/image rotation fields
+- Existing toolbar/bottom dock placement

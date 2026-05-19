@@ -1,0 +1,12 @@
+V63 fixes
+
+- Made the Library, Notes and Trash document list a dedicated scroll area so the list no longer pushes the Study schedule and Flashcards buttons off the sidebar.
+- Kept the document action column visible in Library, Notes and Trash so Trash restore/delete controls remain reachable.
+- Fixed the live pen and highlighter preview so strokes continue to the newest point instead of appearing as small dashed segments while writing.
+
+Verification
+
+- npm install
+- ./node_modules/.bin/tsc --noEmit --pretty false
+- npm run build
+- Browser DOM check for sidebar tabs, search, study buttons and no console errors.

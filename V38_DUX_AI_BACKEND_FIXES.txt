@@ -1,0 +1,9 @@
+V38 Dux AI backend fix
+
+- Replaced api/dux-ai.ts with api/dux-ai.js so Vercel runs a plain JavaScript serverless function.
+- Kept the same /api/dux-ai route for the existing frontend.
+- Added GET health check for /api/dux-ai so the backend can be tested in a browser.
+- Added safer request body parsing for Vercel serverless requests.
+- Added stronger JSON error output so backend issues show as readable errors instead of generic function crashes.
+- Kept Gemini configuration through GEMINI_API_KEY and GEMINI_MODEL.
+- Did not change notebook, PDF, drawing, local library, settings, themes, flashcards or study schedule logic.

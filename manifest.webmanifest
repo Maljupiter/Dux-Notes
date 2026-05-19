@@ -1,0 +1,14 @@
+{
+  "name": "Dux Notes",
+  "short_name": "Dux Notes",
+  "description": "Local-first PDF notes, study planning, flashcards and Dux AI.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4ead6",
+  "theme_color": "#0f766e",
+  "icons": [
+    { "src": "/icon_192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon_512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,17 @@
+V34 import/create hotfix
+
+Targeted changes only:
+- Import PDF now uses a focused Electron window for the native file picker.
+- Import PDF verifies the selected file can be read before copying it into local app storage.
+- PDF bytes are returned to the renderer as a plain byte array for stable packaged-app loading.
+- Import PDF and Create PDF now have guarded error handling so failures show a status message instead of silently doing nothing.
+- Create PDF now keeps the newly created notebook active and resets the page view scroll position.
+- Import/Create buttons have explicit type="button" so they cannot accidentally submit or lose clicks in wrapped UI contexts.
+
+Untouched:
+- PDF rendering logic
+- Drawing engine
+- Notebook storage format
+- Zoom system
+- Toolbar system
+- AI, flashcards, study schedule, settings and themes

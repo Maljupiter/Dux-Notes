@@ -1,0 +1,9 @@
+Dux Notes v55 fixes
+
+- Removed visible inserted-space size pills and resize handle styling.
+- Fixed the study schedule runtime RegExp bug that stopped prompts like "maths every weekday 4pm to 6pm and weekends english 10am to 12pm" from creating sessions.
+- Improved local schedule parsing for weekday/weekend and subject-specific windows.
+- Passed optional subject hints to the Gemini schedule route.
+- Reduced accidental pinch zoom on iPad by requiring stronger finger separation before switching from pan to pinch.
+
+No PDF import/create, drawing tools, Dux AI chat UI, flashcards UI, toolbar layout, themes or storage changes were made.

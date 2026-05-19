@@ -1,0 +1,6 @@
+V31 fixes
+- Bottom bar only: moved live date/time to the far left, centred the page jump, zoom and Dux AI controls, and kept Scratch on the far right.
+- Converted the page indicator into an editable page number field. Press Enter to jump to a valid page.
+- Fixed the lightbulb tip button with a small popup, next tip action, outside-click close, and subtle animation.
+- Matched Undo and Clear page toolbar button sizing, padding, radius and alignment with the surrounding toolbar controls.
+- No PDF rendering, canvas, drawing, zoom, AI, storage or notebook logic was changed.

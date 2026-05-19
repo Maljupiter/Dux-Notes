@@ -1,0 +1,20 @@
+Dux Notes v33 fixes
+
+Targeted changes only:
+- Made the lightbulb tip button open a fixed, visible popup above the bottom bar button.
+- Strengthened the local Dux AI chatbot with better greetings, capability help, answer-checking feedback, quiz mode, flashcard idea mode, calculation handling, and HSC command-word response framing.
+- Added custom colour scheme support in Settings.
+- Users can name and save a colour scheme.
+- Users can choose background, accent and text colours manually.
+- Users can upload an image and the app extracts dominant colours to build a saved scheme.
+- Saved schemes are available from Settings and can be reused or deleted.
+
+Not changed:
+- PDF rendering
+- Canvas rendering
+- Drawing logic
+- Zoom logic
+- Study schedule rendering
+- Flashcard review system
+- Storage system
+- Toolbar event system

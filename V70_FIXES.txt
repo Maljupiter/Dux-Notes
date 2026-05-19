@@ -1,0 +1,6 @@
+V70 fixes
+
+- Made the Pages dropdown and Marks rail follow the visible writing area so they stay available while moving through long notebooks.
+- Changed live highlighter rendering to redraw the active highlighter stroke as one continuous draft path instead of stacking short transparent segments.
+- Polished the Settings custom colour preview card so it uses the app surface colour with a subtle raised neumorphic shadow.
+- Styled the Background, Accent and Text colour picker inputs in Settings with recessed neumorphic treatment, 8px radius and no hard border.

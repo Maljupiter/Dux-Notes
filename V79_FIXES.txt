@@ -1,0 +1,11 @@
+V79 fixes
+
+- Increased the notebook zoom ceiling to 300% while capping high-DPI canvas backing resolution so very large zoom does not explode memory usage.
+- Made the Accessibility > Large button-size mode larger for easier iPad tapping.
+- Fixed Anki import for modern .apkg packages that contain collection.anki21b plus a legacy placeholder collection.anki2.
+- Improved Anki import tolerance for custom note types by preserving SQLite row IDs, reading modern note/field metadata when available, and falling back to readable fields instead of rejecting non-basic templates.
+- Added a clearer error when an Anki package only exposes the legacy "update Anki" compatibility placeholder.
+
+Checks run:
+- npx tsc --noEmit --pretty false
+- npm run build

@@ -1,0 +1,7 @@
+V65 fixes
+
+- Added a Delete all action in Trash so users can permanently clear every trashed document after one confirmation.
+- Applied a soft neumorphic surface pass across the app shell, sidebar, cards, toolbar controls, modals, inputs, bottom controls, thumbnails, and notebook paper.
+- Replaced mixed emoji controls in the right rail with matching inline SVG icons so the toolbar weight feels consistent.
+- Updated theme chrome variables for softer mid-tone surfaces in light themes and tighter restrained shadows in dark mode.
+- Kept canvas, saving, document behaviour, drawing logic, page controls, onboarding, tags, and existing tool workflows unchanged.

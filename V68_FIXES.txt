@@ -1,0 +1,10 @@
+V68 fixes
+
+- Added a delete control for custom tags in the document tag menu. Deleting a custom tag removes it from saved custom tags and from documents that use it.
+- Reduced folder chip neumorphic shadows, removed outward glow from the active chip, and tightened chip spacing to stop light bleed.
+- Removed rectangular bottom-bar styling from the live time display and made the tip button a small circular control.
+- Warmed empty document thumbnails and added subtle page-line styling so missing previews no longer render as a dark square.
+- Reapplied neumorphic depth to Import PDF, Create PDF, document tabs, and right utility buttons with smaller shadows for small controls.
+- Standardised right utility buttons to 36 by 36px with 20px SVG icons and 1.5px stroke weight.
+- Made live ink draw immediately on pointer movement, kept strokes stored as vectors, and prevented default touch handling during active drawing for steadier iPad Pencil input.
+- Removed the unused live stroke animation-frame scheduler after moving active ink drawing to the immediate pointer path.

@@ -1,0 +1,10 @@
+V69 fixes
+
+- Restored fast live erasing for pixel eraser by avoiding full React document/library commits during every pointer move.
+- Restored live object erasing for text/images/shapes/Cartesian planes with a one-frame throttled state commit so objects disappear while erasing without the old latency hit.
+- Added the Maths toolkit button below Shape on the right utility bar.
+- Added Maths panel tabs for Symbols, Templates, Cartesian plane, and Builders.
+- Maths symbols insert into the active text box cursor, or create a centred text box when no text box is active.
+- Maths templates and builders create movable text elements using the existing text box system.
+- Cartesian planes are saved in the document annotations, selectable, draggable, resizable, erasable/deletable, and exported to PDF as PDF vector lines/text.
+- Added neumorphic, theme-aware styling for the Maths toolkit panel.

@@ -1,0 +1,27 @@
+V43 iPad touch polish
+
+Built from v42.
+
+Targeted fixes only:
+- Reworked iPad two-finger page panning to use native touch events on the notebook stage instead of pointer capture on the canvas.
+- Added requestAnimationFrame-based scroll updates during two-finger panning to reduce jitter.
+- Stopped finger and palm pointer events from drawing, moving selections, resizing images/spacers, or clearing the page accidentally.
+- Added stronger iPad writing-surface palm guards: disabled user selection, callout menus and long-press context selection on the canvas/page surface.
+- Preserved text input selection/callout behaviour inside text boxes and note text areas.
+- Kept Apple Pencil/mouse/trackpad drawing and normal laptop behaviour intact.
+
+Not changed:
+- Import PDF
+- Create PDF
+- Save PDF
+- Dux AI backend
+- Flashcards
+- Study schedule
+- Themes
+- Notebook storage
+- PDF rendering
+- Core pen rendering logic
+
+Validation:
+- npm run build passed
+- npx tsc --noEmit passed

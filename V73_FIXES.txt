@@ -1,0 +1,10 @@
+V73 fixes
+
+- Lowered the floating Pages chooser so it clears the document tabs instead of sitting partly under them.
+- Kept the Marks rail aligned with the same floating writing-area navigation system.
+- No notebook, canvas, tool, save/export, or ink behavior was changed in this version.
+
+Verification:
+- TypeScript check passed.
+- Production build passed.
+- Browser QA confirmed the Pages chooser now sits below the document tabs and remains fixed outside the canvas scroll container.

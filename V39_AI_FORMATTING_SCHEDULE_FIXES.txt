@@ -1,0 +1,20 @@
+Dux Notes v39 fixes
+
+Scope kept tight:
+- Improved Dux AI chat message rendering so Gemini Markdown no longer appears as raw asterisks in the chat bubble.
+- Added readable inline formatting for headings, numbered steps, bullet points, bold text, inline code and common maths notation.
+- Updated the Gemini backend prompt to prefer clean headings and readable maths symbols instead of raw Markdown decoration.
+- Strengthened the local study schedule time-slot parser so explicit day/time availability is respected more carefully.
+
+Not changed:
+- Import PDF
+- Create PDF
+- Local library loading
+- Drawing
+- PDF rendering
+- Zoom
+- Toolbar systems
+- Flashcards
+- Themes
+- Settings
+- Notebook storage

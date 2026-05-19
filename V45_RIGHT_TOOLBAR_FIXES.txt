@@ -1,0 +1,24 @@
+Dux Notes v45 targeted UI pass
+
+- Moved the primary tool controls into a compact right-edge toolbar.
+- Replaced the weak tool glyphs with clearer SVG tool icons.
+- Added custom hover/focus tooltips for every compact toolbar button on laptop.
+- Kept all existing tool handlers and keyboard shortcuts intact.
+- Moved Dux AI and Scratch into the right toolbar bottom stack, with Scratch above AI.
+- Made the secondary tool settings panel expand left from the right toolbar.
+- Kept secondary settings names visible.
+- Reduced the topbar height while keeping document name, folder, settings, mode and Save PDF labels visible.
+- Removed the floating sidebar collapse button.
+- Made the DN logo collapse and reopen the library/sidebar.
+- Added a small note under the logo and in the tip rotation explaining the DN collapse shortcut.
+
+Not changed:
+- Drawing engine
+- Pen/highlighter/eraser behaviour
+- PDF import/export
+- Create PDF
+- Dux AI backend
+- Flashcards
+- Study schedule logic
+- Notebook storage
+- iPad touch handling from v44

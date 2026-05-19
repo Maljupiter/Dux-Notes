@@ -1,0 +1,20 @@
+Dux Notes v40 AI maths formatting fix
+
+Scope:
+- Fixed Dux AI answer rendering so raw LaTeX dollar signs do not show in the chat.
+- Added frontend cleanup for common Gemini maths output such as $...$, $$...$$, \(...\), \[...\], \mathbf{}, \vec{}, \hat{}, \frac{}, \sqrt{}, powers, and common symbols.
+- Added backend answer cleanup so Gemini responses are also cleaned before returning to the app.
+- Updated the Gemini system prompt to avoid dollar-sign LaTeX and prefer readable maths symbols directly.
+
+Not changed:
+- Import PDF
+- Create PDF
+- Local library loading
+- PDF rendering
+- Drawing
+- Toolbar
+- Zoom
+- Flashcards
+- Study schedule UI
+- Themes
+- Notebook storage

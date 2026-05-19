@@ -1,0 +1,26 @@
+Dux Notes v44 iPad usability pass
+
+Base: v43 iPad touch fixed build.
+
+Targeted changes only:
+- Added pinch zoom on the iPad writing surface using two-finger distance changes.
+- Kept two-finger panning, now with pan vs pinch detection.
+- Added requestAnimationFrame throttling for live ink overlay redraws.
+- Added PointerEvent coalesced point support where available for smoother Apple Pencil/mouse input.
+- Added handwriting smoothing when a pen/highlighter stroke is saved.
+- Kept finger/palm touches guarded so they do not draw, select, drag, or trigger page copy/callout behaviour.
+- Reduced top toolbar height.
+- Converted main toolbar tools to icon-only buttons with hover titles and aria labels.
+- Changed the secondary tool settings bar to open from the right and expand left as a compact floating strip.
+- Moved Dux AI and Scratch to compact emoji-only bottom utility buttons.
+- Added a Delete page action in the bottom bar and More menu.
+
+Not changed:
+- PDF import/create logic.
+- PDF rendering.
+- Existing notes storage.
+- Flashcards.
+- Study schedule.
+- Dux AI backend.
+- Gemini integration.
+- Existing Mac desktop path.

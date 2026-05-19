@@ -1,0 +1,27 @@
+Dux Notes v36 fixes
+
+Base build: v34 local-library/import-create fixed build.
+
+Targeted AI backend update only:
+- Added api/dux-ai.ts for a secure Vercel Gemini backend route.
+- Added .env.example with GEMINI_API_KEY, GEMINI_MODEL and VITE_DUX_AI_API_URL guidance.
+- Added .gitignore so local secrets and build artefacts are not committed.
+- Connected the existing Dux AI chat UI to the backend route.
+- Added lightweight Dux AI chat memory using the last 24 messages.
+- Kept the offline Dux AI helper as fallback if the backend is unavailable.
+- Added current document/page context to Dux AI requests.
+
+Preserved from v34 local fix:
+- Import PDF desktop app fix.
+- Create PDF desktop app fix.
+- Local library recovery fix.
+
+Not changed:
+- PDF rendering.
+- Canvas and drawing systems.
+- Zoom systems.
+- Toolbar systems.
+- Flashcards.
+- Study schedule.
+- Themes and settings UI.
+- Notebook storage format.

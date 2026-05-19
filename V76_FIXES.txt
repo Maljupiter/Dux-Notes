@@ -1,0 +1,15 @@
+dux-notes-app-v76
+
+Focused fixes from v75:
+
+- Made desktop PDF saving more reliable by sending PDF bytes to Electron as a plain byte array instead of a fragile transferred buffer.
+- Prevented editable sidecar write errors from making the PDF save itself fail.
+- Flushes a pending autosave before PDF export starts, so Save PDF exports the latest in-memory edits without racing the autosave timer.
+- Made scratch-out/scribble erase detection zoom-aware, so small handwriting at high zoom can still be scribble-erased.
+- Inserted Cartesian planes into the currently visible part of the current page instead of always placing them at the page centre.
+
+Verification:
+
+- npx tsc --noEmit --pretty false
+- npm run build
+- npm run build:mac

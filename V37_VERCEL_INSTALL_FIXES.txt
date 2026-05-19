@@ -1,0 +1,13 @@
+Dux Notes v37 Vercel install fix
+
+This version keeps the v36 app code intact and only changes deployment/package configuration.
+
+Fixes:
+- Added vercel.json so Vercel installs only web/runtime dependencies needed for the hosted app and API.
+- Vercel install command is now: npm ci --omit=dev --ignore-scripts
+- This avoids installing Electron/electron-builder on Vercel, because Vercel only needs the web build and api/dux-ai.ts backend.
+- Pinned package.json dependency versions instead of using latest tags.
+- Rewrote package-lock resolved tarball URLs from the local sandbox registry to the public npm registry.
+- Kept local Mac build scripts unchanged. Local Mac builds still run npm install and npm run build:mac.
+
+No app feature logic was changed.

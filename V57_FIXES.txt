@@ -1,0 +1,20 @@
+Dux Notes v57 fixes
+
+Targeted changes from v56:
+- Selected text boxes can now be edited after creation through the side settings panel: colour, font, size, weight and fill.
+- Selected shapes can now be edited after creation through the side settings panel: shape type, border colour, fill and width.
+- Selected shapes now expose resize handles so users can resize finished shapes.
+- Added a visible bookmarks rail beside the page thumbnails, showing bookmarked pages and their custom page titles.
+- Contents still remains the editable table of contents for renaming pages and toggling bookmarks.
+- Laptop trackpad pinch zoom now uses a non-passive wheel listener on the notebook stage to reduce browser-window zoom hijacking.
+- Most modal overlays can now be closed by clicking the blurred backdrop.
+- Help has been updated for page types, bookmarks, right-click page deletion, selected text/shape editing, trackpad pinch zoom and click-outside-to-close behaviour.
+
+Not changed:
+- PDF import/create
+- Core pen/highlighter/eraser behaviour
+- Dux AI backend
+- Flashcards logic
+- Study schedule logic
+- Existing storage model except existing optional v56 fields
+- Toolbar layout and bottom dock

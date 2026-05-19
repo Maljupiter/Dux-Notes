@@ -1,0 +1,12 @@
+V74 fixes
+
+- Added post-selection property editing for Cartesian planes: ranges, grid style, spacing, labels, ticks, axis colour, grid colour, width and height can now be changed after insertion.
+- Expanded selected shape editing with opacity and numeric width/height controls, while keeping the existing shape type, stroke, fill and layer controls.
+- Expanded selected text editing with quick Edit text plus numeric width/height controls alongside existing font, colour, weight and fill controls.
+- Rebuilt the cylinder shape drawing path so it renders like a proper 3D cylinder with clean side walls and top/bottom ellipses.
+- Added Settings > Accessibility button sizing with Compact, Standard and Large sizes, saved locally.
+
+Verification:
+- TypeScript check passed.
+- Production build passed.
+- Browser QA created a notebook, inserted a Cartesian plane, edited its grid style after insertion, verified the shape dropdown still exposes Cylinder, and verified Large button sizing updates the rendered toolbar buttons.
