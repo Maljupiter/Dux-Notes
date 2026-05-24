@@ -1,0 +1,7 @@
+V78 offline intelligence and Anki import
+
+- Expanded the local flashcard bank with original HSC-style Chemistry, Physics and Mathematics prompts informed by public syllabus/exam patterns, without copying past-paper questions.
+- Improved offline Dux AI so API failures or rate limits still return topic coaching, practice drills, marking focus and exam-response structure.
+- Improved the local Study Schedule generator so offline plans use active recall, HSC-style drills, mistake logs, timed mixed sets and matching flashcard decks when available.
+- Added Anki import for .apkg/.apkg2/.apkj packages plus tab-separated or CSV exports. Imported cards create a new renameable deck before saving.
+- Kept the existing deck review, spaced repetition, flashcard generator and study planner behaviours intact.

@@ -1,0 +1,8 @@
+V87 fixes
+
+- Made scribble erase faster and stricter: four zigzags across a stroke, pause for about 0.33 seconds, then lift.
+- Changed scratch detection from a loose nearby-radius check to an actual contact/intersection check so neighbouring strokes are much less likely to be erased.
+- Hid the Marks rail automatically above normal zoom so it does not cover question text while the user is zoomed in.
+- Added extra right-side canvas breathing room so smaller laptop screens can scroll to the right edge of the paper without the vertical toolbar covering it.
+- Changed Dux AI image handling to a two-stage Groq pipeline: Scout reads/OCRs the page and handwriting, then the stronger text model solves or marks from that evidence.
+- Cleaned Dux AI maths output by stripping raw markdown hashes, pmatrix/bmatrix words and backslash row breaks from answers.

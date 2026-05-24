@@ -1,0 +1,8 @@
+Version 85 fixes
+
+- Dux AI now preserves trig/vector OCR more carefully for maths questions, including cos(t), sin(t), t², π/2 and column-vector questions.
+- Backend answer cleanup now converts LaTeX pmatrix/bmatrix/vector output into readable tuples instead of showing raw pmatrix text.
+- Dux AI chat text wraps long maths expressions more cleanly inside the floating panel.
+- Cartesian plane resizing is throttled to animation frames and no longer triggers full-page rerenders while the handle is moving.
+- Zoom updates are throttled to animation frames so wheel, pinch and slider zoom feel smoother.
+- The page renderer now avoids expensive background rerenders while selected objects are being dragged or resized.

@@ -1,0 +1,12 @@
+Version 71 fixes
+
+- Dark mode only: raised and pressed neumorphic shadows are restored with a brighter dark slate base.
+- Dark sidebar cards, Import/Create buttons, folder chips, right toolbar buttons, and bottom controls now have visible dark-mode depth and contrast.
+- Dark zoom control has an inset track and raised thumb styling.
+- Dark canvas page shell and rendered blank pages use a softer off-white tint to reduce glare.
+- Light mode and app functionality were left unchanged.
+
+Verification:
+- npm run build
+- npx tsc --noEmit --pretty false
+- Browser QA at http://127.0.0.1:4192/: toggled Dark mode, created a blank notebook, loaded the document, checked computed dark-mode shadows/colours, and confirmed no console errors or warnings.

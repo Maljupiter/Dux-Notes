@@ -1,0 +1,8 @@
+Dux Notes v54 fixes
+
+- Removed visible inserted-space pixel labels and the blue resize pill from spacer overlays.
+- Fixed study schedule availability parsing so examples like "Monday 4pm-6pm and Wednesday 7pm-9pm" create real sessions.
+- Connected Study Schedule generation to the existing Gemini-backed Dux AI route, with local fallback if AI is unavailable.
+- Connected Flashcard generation to the existing Gemini-backed Dux AI route, with local fallback if AI is unavailable.
+- Tuned iPad two-finger gesture detection so small finger drift keeps panning instead of accidentally triggering pinch zoom.
+- Did not change note storage, PDF import/create, drawing tools, toolbar layout, Dux AI chat UI, bottom dock, themes or existing page rendering.

@@ -1,0 +1,434 @@
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const path = require('path');
+const fs = require('fs/promises');
+const crypto = require('crypto');
+const zlib = require('zlib');
+
+const isDev = !app.isPackaged;
+let mainWindow;
+let libraryWriteQueue = Promise.resolve();
+let rendererRecoveryCount = 0;
+
+process.on('uncaughtException', (error) => {
+  console.error('Unhandled desktop process error:', error);
+});
+
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled desktop promise rejection:', error);
+});
+
+function getIconPath() {
+  const pngPath = path.join(__dirname, '..', 'build', 'icon.png');
+  return pngPath;
+}
+
+function getRootDir() {
+  return path.join(app.getPath('userData'), 'dux-notes-data');
+}
+
+function getDocsDir() {
+  return path.join(getRootDir(), 'documents');
+}
+
+function getLibraryPath() {
+  return path.join(getRootDir(), 'library.json');
+}
+
+function safeFilePart(value, fallback = 'Untitled') {
+  const clean = String(value || fallback).replace(/[\\/:*?"<>|]/g, '-').trim();
+  return clean || fallback;
+}
+
+function sidecarPathFor(pdfPath) {
+  return `${pdfPath}.localnotes.json`;
+}
+
+function toBuffer(data) {
+  if (Buffer.isBuffer(data)) return data;
+  if (data instanceof ArrayBuffer) return Buffer.from(new Uint8Array(data));
+  if (ArrayBuffer.isView(data)) return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+  if (Array.isArray(data)) return Buffer.from(data);
+  if (data && data.type === 'Buffer' && Array.isArray(data.data)) return Buffer.from(data.data);
+  if (data && typeof data === 'object') {
+    const numericKeys = Object.keys(data).filter((key) => /^\d+$/.test(key));
+    if (numericKeys.length > 0) {
+      numericKeys.sort((a, b) => Number(a) - Number(b));
+      return Buffer.from(numericKeys.map((key) => Number(data[key])));
+    }
+  }
+  if (data == null) return Buffer.alloc(0);
+  return Buffer.from(data);
+}
+
+async function writeFileAtomic(filePath, data, options) {
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
+  const tempPath = `${filePath}.tmp-${process.pid}-${Date.now()}`;
+  await fs.writeFile(tempPath, data, options);
+  await fs.rename(tempPath, filePath);
+}
+
+async function enrichEditableSidecar(editableSidecar) {
+  if (!editableSidecar || typeof editableSidecar !== 'object') return editableSidecar;
+  const sidecar = { ...editableSidecar };
+  if (sidecar.originalPdfBase64 || !sidecar.document?.pdfFileName) return sidecar;
+
+  try {
+    const sourcePath = path.join(getDocsDir(), safeFilePart(sidecar.document.pdfFileName));
+    const sourceBytes = await fs.readFile(sourcePath);
+    sidecar.originalPdfBase64 = sourceBytes.toString('base64');
+  } catch (error) {
+    console.warn('Original PDF could not be embedded in editable sidecar. The exported PDF still saved.', error);
+    sidecar.originalPdfBase64 = null;
+  }
+
+  return sidecar;
+}
+
+async function writeEditableSidecar(pdfPath, editableSidecar) {
+  if (!editableSidecar) return;
+  try {
+    const sidecar = await enrichEditableSidecar(editableSidecar);
+    await writeFileAtomic(sidecarPathFor(pdfPath), JSON.stringify(sidecar, null, 2), 'utf8');
+  } catch (error) {
+    console.warn('Editable sidecar could not be written. The PDF export still succeeded.', error);
+  }
+}
+
+async function nextAvailablePath(directory, fileName) {
+  const parsed = path.parse(fileName);
+  const baseName = parsed.name || 'Dux Notes Export';
+  const extension = parsed.ext || '.pdf';
+
+  for (let index = 0; index < 100; index += 1) {
+    const suffix = index === 0 ? '' : `-${index + 1}`;
+    const candidate = path.join(directory, `${baseName}${suffix}${extension}`);
+    try {
+      await fs.access(candidate);
+    } catch {
+      return candidate;
+    }
+  }
+
+  return path.join(directory, `${baseName}-${Date.now()}${extension}`);
+}
+
+async function writePdfExportFile(targetPath, defaultFileName, pdfBytes, editableSidecar) {
+  const buffer = toBuffer(pdfBytes);
+  if (!buffer.length) throw new Error('PDF export produced an empty file.');
+  const resolvedPath = targetPath.toLowerCase().endsWith('.pdf') ? targetPath : `${targetPath}.pdf`;
+  await writeFileAtomic(resolvedPath, buffer);
+  writeEditableSidecar(resolvedPath, editableSidecar).catch((error) => {
+    console.warn('Editable sidecar could not be written after PDF export. The PDF export still succeeded.', error);
+  });
+  return resolvedPath;
+}
+
+async function writePdfExportWithDownloadsFallback(targetPath, defaultFileName, pdfBytes, editableSidecar) {
+  try {
+    return await writePdfExportFile(targetPath, defaultFileName, pdfBytes, editableSidecar);
+  } catch (error) {
+    console.error('Chosen PDF save location failed. Falling back to Downloads.', error);
+    const downloadsPath = app.getPath('downloads');
+    const safeDefaultName = safeFilePart(defaultFileName || 'Dux Notes Export.pdf', 'Dux Notes Export.pdf');
+    const fileName = safeDefaultName.toLowerCase().endsWith('.pdf') ? safeDefaultName : `${safeDefaultName}.pdf`;
+    const fallbackPath = await nextAvailablePath(downloadsPath, fileName);
+    return await writePdfExportFile(fallbackPath, fileName, pdfBytes, editableSidecar);
+  }
+}
+
+async function readEditableSidecar(pdfPath) {
+  try {
+    const raw = await fs.readFile(sidecarPathFor(pdfPath), 'utf8');
+    const parsed = JSON.parse(raw);
+    if ((parsed?.app === 'Dux Notes' || parsed?.app === 'Local Notes') && parsed?.document) return parsed;
+  } catch {
+    // No editable sidecar found. This is a normal imported PDF.
+  }
+  return null;
+}
+
+async function ensureStorage() {
+  await fs.mkdir(getDocsDir(), { recursive: true });
+  try {
+    await fs.access(getLibraryPath());
+  } catch {
+    await fs.writeFile(getLibraryPath(), JSON.stringify({ documents: [] }, null, 2), 'utf8');
+  }
+}
+
+async function readLibrary() {
+  await ensureStorage();
+  const libraryPath = getLibraryPath();
+
+  try {
+    const raw = await fs.readFile(libraryPath, 'utf8');
+    const trimmed = String(raw || '').trim();
+    const parsed = trimmed ? JSON.parse(trimmed) : { documents: [] };
+
+    if (!parsed || !Array.isArray(parsed.documents)) {
+      return { documents: [] };
+    }
+
+    return parsed;
+  } catch (error) {
+    console.error('Local library could not be read. A fresh empty library will be created.', error);
+
+    const backupName = `library-broken-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+    const backupPath = path.join(getRootDir(), backupName);
+
+    try {
+      await fs.rename(libraryPath, backupPath);
+    } catch {
+      // If there is no readable file to back up, continue with a clean library.
+    }
+
+    const freshLibrary = { documents: [] };
+    await fs.writeFile(libraryPath, JSON.stringify(freshLibrary, null, 2), 'utf8');
+    return freshLibrary;
+  }
+}
+
+async function writeLibrary(library) {
+  await ensureStorage();
+  await writeFileAtomic(getLibraryPath(), JSON.stringify(library, null, 2), 'utf8');
+}
+
+async function updateLibrary(mutator) {
+  const run = libraryWriteQueue.catch(() => null).then(async () => {
+    const library = await readLibrary();
+    const result = await mutator(library);
+    await writeLibrary(library);
+    return result;
+  });
+  libraryWriteQueue = run.then(() => null, () => null);
+  return run;
+}
+
+function createWindow() {
+  app.setName('Dux Notes');
+  mainWindow = new BrowserWindow({
+    width: 1400,
+    height: 900,
+    minWidth: 760,
+    minHeight: 600,
+    backgroundColor: '#F1E9D2',
+    icon: getIconPath(),
+    title: 'Dux Notes',
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.cjs'),
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: false
+    }
+  });
+
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:5173');
+  } else {
+    mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  }
+
+  mainWindow.webContents.on('render-process-gone', (_event, details) => {
+    console.error('Dux Notes renderer process stopped:', details);
+    if (rendererRecoveryCount >= 2) return;
+    rendererRecoveryCount += 1;
+    setTimeout(() => {
+      if (!mainWindow || mainWindow.isDestroyed()) return;
+      mainWindow.reload();
+    }, 600);
+  });
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    rendererRecoveryCount = 0;
+  });
+}
+
+app.whenReady().then(async () => {
+  await ensureStorage();
+  createWindow();
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+
+ipcMain.handle('library:load', async () => {
+  return await readLibrary();
+});
+
+ipcMain.handle('library:saveDocument', async (_event, documentRecord) => {
+  return await updateLibrary((library) => {
+    const now = new Date().toISOString();
+    documentRecord.updatedAt = now;
+
+    const index = library.documents.findIndex((doc) => doc.id === documentRecord.id);
+    if (index >= 0) {
+      library.documents[index] = documentRecord;
+    } else {
+      library.documents.unshift(documentRecord);
+    }
+
+    return documentRecord;
+  });
+});
+
+ipcMain.handle('pdf:import', async () => {
+  await ensureStorage();
+  const ownerWindow = BrowserWindow.getFocusedWindow() || mainWindow;
+  const result = await dialog.showOpenDialog(ownerWindow, {
+    title: 'Import PDF',
+    properties: ['openFile'],
+    filters: [{ name: 'PDF files', extensions: ['pdf'] }]
+  });
+
+  if (result.canceled || result.filePaths.length === 0) {
+    return null;
+  }
+
+  const sourcePath = result.filePaths[0];
+  await fs.access(sourcePath);
+  const sidecar = await readEditableSidecar(sourcePath);
+  const id = crypto.randomUUID();
+  const fileName = `${id}.pdf`;
+  const destPath = path.join(getDocsDir(), fileName);
+  const now = new Date().toISOString();
+
+  let doc;
+  if (sidecar?.document) {
+    const sourceDoc = sidecar.document;
+    if (sidecar.originalPdfBase64) {
+      await fs.writeFile(destPath, Buffer.from(sidecar.originalPdfBase64, 'base64'));
+    } else if (sourceDoc.pdfFileName) {
+      await fs.copyFile(sourcePath, destPath);
+    }
+
+    doc = {
+      ...sourceDoc,
+      id,
+      name: path.basename(sourcePath),
+      pdfFileName: sidecar.originalPdfBase64 || sourceDoc.pdfFileName ? fileName : null,
+      sourceDir: path.dirname(sourcePath),
+      createdAt: now,
+      updatedAt: now,
+      deletedAt: null,
+      thumbnailDataUrl: null
+    };
+  } else {
+    await fs.copyFile(sourcePath, destPath);
+    doc = {
+      id,
+      name: path.basename(sourcePath),
+      pdfFileName: fileName,
+      sourceDir: path.dirname(sourcePath),
+      createdAt: now,
+      updatedAt: now,
+      pages: [],
+      annotations: {}
+    };
+  }
+
+  await updateLibrary((library) => {
+    library.documents.unshift(doc);
+    return doc;
+  });
+
+  return doc;
+});
+
+ipcMain.handle('pdf:read', async (_event, documentId) => {
+  await ensureStorage();
+  const library = await readLibrary();
+  const doc = library.documents.find((item) => item.id === documentId);
+  if (!doc || !doc.pdfFileName) throw new Error('PDF not found in local library.');
+
+  const pdfPath = path.join(getDocsDir(), doc.pdfFileName);
+  const buffer = await fs.readFile(pdfPath);
+  return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+});
+
+ipcMain.handle('anki:zstdDecompress', async (_event, compressedBytes) => {
+  if (typeof zlib.zstdDecompressSync !== 'function') {
+    throw new Error('This desktop runtime cannot decode modern zstd Anki packages. Update Dux Notes or export from Anki with “Support older Anki versions” enabled.');
+  }
+
+  const buffer = toBuffer(compressedBytes);
+  if (!buffer.length) throw new Error('The Anki package contains an empty compressed collection.');
+  const decompressed = zlib.zstdDecompressSync(buffer, { maxOutputLength: 200 * 1024 * 1024 });
+  return decompressed.buffer.slice(decompressed.byteOffset, decompressed.byteOffset + decompressed.byteLength);
+});
+
+
+ipcMain.handle('pdf:export', async (_event, defaultFileName, pdfBytes, editableSidecar) => {
+  const safeDefaultName = safeFilePart(defaultFileName || 'Dux Notes Export.pdf', 'Dux Notes Export.pdf');
+  const ownerWindow = BrowserWindow.getFocusedWindow() || mainWindow;
+  const saveDialogOptions = {
+    title: 'Save notebook as PDF',
+    defaultPath: safeDefaultName.endsWith('.pdf') ? safeDefaultName : `${safeDefaultName}.pdf`,
+    filters: [{ name: 'PDF files', extensions: ['pdf'] }]
+  };
+  let result;
+
+  try {
+    result = ownerWindow
+      ? await dialog.showSaveDialog(ownerWindow, saveDialogOptions)
+      : await dialog.showSaveDialog(saveDialogOptions);
+  } catch (error) {
+    console.error('Save dialog failed. Falling back to Downloads.', error);
+    const downloadsPath = app.getPath('downloads');
+    const fileName = safeDefaultName.toLowerCase().endsWith('.pdf') ? safeDefaultName : `${safeDefaultName}.pdf`;
+    const fallbackPath = await nextAvailablePath(downloadsPath, fileName);
+    return await writePdfExportWithDownloadsFallback(fallbackPath, fileName, pdfBytes, editableSidecar);
+  }
+
+  if (result.canceled || !result.filePath) {
+    return null;
+  }
+
+  return await writePdfExportWithDownloadsFallback(result.filePath, safeDefaultName, pdfBytes, editableSidecar);
+});
+
+ipcMain.handle('folder:createMapped', async (_event, folderName) => {
+  const safeFolderName = safeFilePart(folderName, 'New Folder');
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: `Choose where to create "${safeFolderName}"`,
+    properties: ['openDirectory', 'createDirectory']
+  });
+
+  if (result.canceled || result.filePaths.length === 0) {
+    return null;
+  }
+
+  const targetPath = path.join(result.filePaths[0], safeFolderName);
+  await fs.mkdir(targetPath, { recursive: true });
+  return { name: safeFolderName, path: targetPath };
+});
+
+ipcMain.handle('pdf:exportToFolder', async (_event, folderPath, defaultFileName, pdfBytes, editableSidecar) => {
+  if (!folderPath) return null;
+  const safeDefaultName = safeFilePart(defaultFileName || 'Dux Notes Export.pdf', 'Dux Notes Export.pdf');
+  const fileName = safeDefaultName.toLowerCase().endsWith('.pdf') ? safeDefaultName : `${safeDefaultName}.pdf`;
+  const destPath = path.join(folderPath, fileName);
+  return await writePdfExportWithDownloadsFallback(destPath, fileName, pdfBytes, editableSidecar);
+});
+
+ipcMain.handle('document:delete', async (_event, documentId) => {
+  const doc = await updateLibrary((library) => {
+    const existing = library.documents.find((item) => item.id === documentId);
+    library.documents = library.documents.filter((item) => item.id !== documentId);
+    return existing;
+  });
+
+  if (doc?.pdfFileName) {
+    try {
+      await fs.unlink(path.join(getDocsDir(), doc.pdfFileName));
+    } catch {
+      // The PDF may have already been removed. Do not block deleting the library entry.
+    }
+  }
+
+  return { ok: true };
+});

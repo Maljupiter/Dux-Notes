@@ -1,0 +1,11 @@
+Dux Notes v27 fixes
+
+Priority fixes:
+- Reworked the toolbar so tool-specific settings now appear in a secondary drop-down settings bar below the main toolbar.
+- Pen, Highlighter, Shape and Eraser controls are now easier to access without hunting through a cramped horizontal utility bar.
+- More menu is now forced above the canvas with a higher z-index so the dropdown is visible.
+- Ask AI button in the bottom bar has been restyled as a cleaner Dux AI pill.
+- Dux AI now uses the built-in flashcard bank plus an expanded syllabus guide layer for HSC Chemistry, Physics, Maths Advanced, Extension 1, Extension 2, English Advanced, Economics and Software Engineering.
+
+Important note:
+Dux AI is still a local rule-based study helper. It does not call ChatGPT or the internet. It is much smarter than the earlier version, but not the same as a live cloud model.

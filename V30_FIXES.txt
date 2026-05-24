@@ -1,0 +1,8 @@
+Dux Notes v30 fixes
+
+- Bottom utility bar only: removed the workspace mode pill that showed labels like Select mode.
+- Moved Scratch to the far left and placed the live Sydney date/time immediately beside it.
+- Kept zoom and Dux AI grouped toward the centre-right without touching their handlers.
+- Moved document status and page indicator to the far-right document group.
+- Tightened spacing, alignment, pill sizing and responsive behaviour for smaller screens.
+- No PDF rendering, canvas positioning, zoom logic, AI logic, toolbar logic, shortcuts, stores, refs or routes were changed.

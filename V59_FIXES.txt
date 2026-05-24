@@ -1,0 +1,6 @@
+Dux Notes v59 fixes
+
+- Redesigned the document tabs visually only: canvas-width tab strip below topbar, polished rounded tabs, active accent underline, muted close button on hover, document icon, horizontal overflow.
+- Removed the redundant top-right delete button from selected images. The existing delete/trash control remains available in the selected-image control bubble/settings.
+- Added smoother image rotation: drag the rotate handle for free rotation or tap it for a small 15 degree rotation step.
+- Did not change PDF import/create, drawing tools, Dux AI, flashcards, study schedule, page rendering, notebook storage, bottom dock, or existing selection behaviour outside the requested image/tab fixes.

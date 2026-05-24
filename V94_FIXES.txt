@@ -1,0 +1,14 @@
+v94 stroke hold shape snapping
+
+- Added pen/highlighter hold snapping: draw a stroke, hold still for about 0.33 seconds, then lift.
+- Line-like strokes become clean straight lines from the stroke start to end point.
+- Circle-like closed strokes become perfect circles, including rough circles with a small overlap/tail.
+- Existing scribble-hold erase keeps first priority, so four-zigzag scratch erase still erases instead of snapping into a shape.
+- Kept the v93 stability and PDF save fixes unchanged.
+
+Verified:
+- node --check electron/main.cjs
+- node --check electron/preload.cjs
+- npm run build
+- npm run build:mac
+- Browser smoke test: app loads, Pen tool is present, no console errors.

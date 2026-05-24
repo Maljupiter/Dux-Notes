@@ -1,0 +1,11 @@
+Version 83 fixes
+
+- Removed the unsupported Llama 4 Maverick vision fallback from the Groq backend defaults.
+- Vision OCR now defaults only to the free-plan model shown in Groq Cloud: meta-llama/llama-4-scout-17b-16e-instruct.
+- The Groq environment example now leaves GROQ_VISION_FALLBACK_MODEL blank so Vercel does not try a model that is unavailable on the free plan.
+
+Recommended free-plan Vercel variables:
+GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_FALLBACK_MODEL=openai/gpt-oss-120b
+GROQ_VISION_MODEL=meta-llama/llama-4-scout-17b-16e-instruct
+GROQ_VISION_FALLBACK_MODEL=

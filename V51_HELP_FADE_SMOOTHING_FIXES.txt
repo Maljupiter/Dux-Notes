@@ -1,0 +1,8 @@
+Dux Notes v51 targeted fixes
+
+- Added theme/custom colour instructions to the Help guide, including the default theme names:
+  Focused Ecru, Sage & Slate, Terracotta & Parchment, Cyberpunk Night and Lavender Mist.
+- Help now explains saved custom themes and image-based theme extraction.
+- Extended secondary settings fade behaviour to Eraser and Shape while actively using them.
+- Slightly improved saved pen stroke smoothing to reduce small hand jitter while keeping the original writing path intact.
+- No changes were made to PDF import/create, Dux AI backend, flashcards, study planner, storage, toolbar layout, bottom dock or iPad gesture logic.

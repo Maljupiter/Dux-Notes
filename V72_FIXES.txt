@@ -1,0 +1,12 @@
+Version 72 fixes
+
+- Pages dropdown and Marks rail now render outside the scrollable canvas stage and pin to the measured writing-area viewport, so they stay visible while long notebooks move underneath.
+- Page and Marks jumps now target the canvas-stage scroll container directly instead of relying only on browser scrollIntoView behaviour.
+- iPad ink latency pass: live highlighter preview now draws direct live segments like the pen instead of re-rendering the full overlay during every pointer move.
+- Pen/highlighter point capture keeps more coalesced Pencil samples for smoother live strokes.
+- Removed a duplicate full-page render effect so document changes do less redundant canvas work.
+
+Verification:
+- npx tsc --noEmit --pretty false
+- npm run build
+- Browser QA at http://127.0.0.1:4193/: created and reopened a notebook, verified the floating Pages and Marks controls are outside the scroll container, checked page dropdown state changes, confirmed fixed control coordinates stayed stable, and confirmed no console errors or warnings.

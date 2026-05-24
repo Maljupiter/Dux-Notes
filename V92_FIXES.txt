@@ -1,0 +1,16 @@
+v92 updates
+
+- Restored the floating extra tool settings bar surface after its portal move by keeping the app theme variables on the portalled panel.
+- Sped up PDF export by copying untouched source PDF pages into the export instead of rasterising every page background.
+- Batched retained stroke, shape and text overlays during PDF export so annotated pages do not create a full-page PNG per stroke.
+- Sent PDF bytes to Electron as an ArrayBuffer instead of a huge number array to reduce desktop save handoff overhead.
+- Stored OCR/page evidence from visual Dux AI question turns in chat memory and reuses matching numbered-question evidence for later redo/re-evaluate turns.
+- Routed requests such as "redo question 6" to prior chat/question evidence instead of the currently visible viewport.
+
+Verification:
+
+- node --check api/dux-ai.js
+- npm run build
+- Browser: verified the pen settings bar has an opaque themed surface after opening Pen settings
+- Browser: created a blank PDF and Save PDF reached the successful export status
+- npm run build:mac reached Electron DMG packaging, then the sandbox blocked Electron Builder's cache write under ~/Library/Caches

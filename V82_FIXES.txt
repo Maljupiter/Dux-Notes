@@ -1,0 +1,9 @@
+Version 82 fixes
+
+- Dux AI now sends a compressed current-page image to the Groq backend so scanned PDF pages, diagrams, tables and visible handwritten strokes can be read by a vision model.
+- The Groq backend now uses a vision model for image-backed Dux AI requests and timetable screenshots, while keeping the text model for normal chat/generation.
+- The environment example now documents Groq text and vision variables instead of the old Gemini variables.
+- Study schedule uploads now accept PNG, JPEG and WebP screenshots, including drag-and-drop onto the upload card.
+- Study schedule start/end dates are clamped so the end date cannot be earlier than the start date.
+- Manual study session times are repaired automatically: if the start time is later than or equal to the end time, the end time becomes one hour after the start where possible.
+- Manual end-time inputs now use a minimum time after the selected start time.

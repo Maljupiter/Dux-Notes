@@ -1,0 +1,13 @@
+dux-notes-app-v75
+
+Focused fixes from v74:
+
+- Fixed the Settings > Accessibility button-size selector so Compact, Standard and Large always stay inside the neumorphic control.
+- Added a save-failure focus overlay that blurs/tints the app red when autosave/export status reports a failure.
+- Kept the Save PDF button visually clear above the failure overlay and added a prompt telling the user to press it for a fresh saved copy.
+
+Verification:
+
+- npx tsc --noEmit --pretty false
+- npm run build
+- Browser QA confirmed the Accessibility selector buttons stay inside the Settings control with no horizontal overflow.

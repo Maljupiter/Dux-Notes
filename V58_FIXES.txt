@@ -1,0 +1,11 @@
+Dux Notes v58 fixes
+
+- Improved text boxes after creation: selected text boxes can be edited again, support transparent/white/black/paper fills, and keep the selected text settings in one compact row where screen width allows.
+- Added selected object layer controls: bring to front, send to back, move forward, move backward.
+- Added image locking so diagrams can be pinned while drawing over them.
+- Added selected image controls in the secondary settings panel, including rotate and lock/unlock.
+- Added lasso selection filters for all, ink, images, text and shapes.
+- Added document tabs for recently opened notebooks.
+- Added Cornell notes as a fourth blank page type.
+- Added PDF page crop from the More menu.
+- Kept existing PDF import/create, drawing, AI, flashcards, study schedule, iPad gestures, toolbar layout and storage behaviour intact.

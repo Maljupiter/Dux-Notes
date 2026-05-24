@@ -1,0 +1,9 @@
+Dux Notes v60 fixes
+
+- Kept document tabs in the user's chosen order when switching between already-open documents instead of moving the active tab to the far left.
+- Added pointer-based document tab rearranging so tabs can be dragged left or right with mouse, trackpad, or touch.
+- Tightened the selected-object settings bar so selected text box controls no longer stretch across the workspace.
+- Fixed selected text boxes so pressing the selected text area again lets the user type immediately, while the move/resize controls still work.
+- Removed the lasso filter panel's large pale background and kept only the compact filter control.
+- Fixed lasso filter clicks and made lasso selection more reliable with sparse mouse/touch pointer paths.
+- Did not change PDF import/create, drawing tools, image controls, page rendering, notebook storage, Dux AI, flashcards, study schedule, bottom dock, or unrelated toolbar behavior.

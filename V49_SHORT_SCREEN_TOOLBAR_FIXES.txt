@@ -1,0 +1,8 @@
+V49 short-screen toolbar fix
+
+- Kept v48 as the base.
+- Fixed the right-side toolbar on screens with less vertical height.
+- The Undo and Clear page buttons now stay inside the side rail instead of spilling outside on shorter laptop screens.
+- Added progressive compact sizing for the right toolbar at shorter viewport heights.
+- Added a hidden vertical scroll safety path only for very short screens, so controls remain reachable without changing tool behaviour.
+- Did not change drawing, tools, PDF import/create, Dux AI, flashcards, study schedule, storage, iPad touch handling, starter screen, or bottom dock logic.

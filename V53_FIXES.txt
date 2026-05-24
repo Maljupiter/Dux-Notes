@@ -1,0 +1,6 @@
+Dux Notes v53 fixes
+
+- Added scratch-out erasing for pen gestures. A firm back-and-forth scribble across existing ink removes the targeted strokes instead of saving the scribble.
+- Removed the eraser explanation text from the secondary eraser settings bar to reduce clutter.
+- Added a Get started section to Help with starter prompts for Study schedule and Flashcards.
+- Kept existing PDF, drawing, AI, storage, toolbar, theme, iPad and Mac behaviour unchanged outside the requested fixes.

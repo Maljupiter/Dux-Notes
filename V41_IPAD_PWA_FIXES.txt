@@ -1,0 +1,8 @@
+V41 iPad/PWA fixes
+- Added a browser/iPad local storage bridge so the web app no longer crashes when Electron-only localNotes is unavailable.
+- Import PDF now works in Safari/browser mode through the normal file picker and stores PDF bytes in IndexedDB.
+- Create PDF now works in Safari/browser mode using the same saveDocument path as the desktop app.
+- Save PDF falls back to a browser/iPad download and keeps the editable sidecar export.
+- Dux AI still calls the Vercel backend at /api/dux-ai in the hosted web app.
+- Added basic PWA metadata so the app can be added to the iPad Home Screen.
+- Desktop Electron localNotes remains untouched and still takes priority in the Mac app.

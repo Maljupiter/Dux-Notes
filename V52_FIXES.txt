@@ -1,0 +1,7 @@
+Dux Notes v52 targeted update
+
+- Removed Undo and Clear page from the More menu.
+- Added Redo to the right toolbar above Undo.
+- Added Share beside Save PDF. It uses the browser/iPad share sheet when available, and falls back to downloading the PDF.
+- Improved eraser stroke handling so dragging/scribbling the eraser across handwriting follows the full eraser path, not just isolated pointer dots.
+- Kept existing eraser modes, Save PDF, PDF import/create, AI, flashcards, study schedule, toolbar layout, bottom dock and iPad touch logic intact.

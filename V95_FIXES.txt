@@ -1,0 +1,7 @@
+V95 fixes
+
+- Separated PDF export failures from normal local autosave failures so the full red Save PDF recovery overlay only appears for real PDF export problems, not while writing or drawing.
+- Moved browser notebook metadata storage from localStorage into IndexedDB to reduce quota-related autosave failures on large notebooks while keeping legacy localStorage as a read fallback.
+- Cached the active ink canvas context and backing scale during live pen/highlighter strokes to reduce per-pointer-move work and keep live ink more responsive on iPad and laptop.
+- Changed wheel, pinch, and slider zoom to anchor around the cursor/last writing-area pointer instead of jumping toward the top of the page.
+- Verified production build, TypeScript, Electron syntax checks, local browser smoke flow, and macOS app build.

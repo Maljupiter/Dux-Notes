@@ -1,0 +1,71 @@
+{
+  "name": "dux-notes-app",
+  "version": "1.7.0",
+  "description": "Dux Notes, a local-first cross-platform PDF notes, study schedule, scratchpad and flashcard app.",
+  "main": "electron/main.cjs",
+  "author": "Dux Notes",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build": "vite build",
+    "start": "electron .",
+    "dist": "npm run build && electron-builder",
+    "build:mac": "npm run dist",
+    "mac:install-note": "echo \"Run npm install, then npm run build:mac. Open release and drag Dux Notes to Applications.\""
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "6.0.1",
+    "fzstd": "^0.1.1",
+    "pdf-lib": "1.17.1",
+    "pdfjs-dist": "4.10.38",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "typescript": "6.0.3",
+    "vite": "8.0.11"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "concurrently": "9.2.1",
+    "electron": "42.0.1",
+    "electron-builder": "26.8.1",
+    "wait-on": "9.0.6"
+  },
+  "build": {
+    "appId": "com.duxnotes.desktop",
+    "productName": "Dux Notes",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json",
+      "build/**/*"
+    ],
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "build/icon.png"
+    },
+    "artifactName": "Dux-Notes-${version}-${os}-${arch}.${ext}"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "packageManager": "npm@10.9.2"
+}

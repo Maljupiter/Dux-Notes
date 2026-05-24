@@ -1,0 +1,8 @@
+V67 fixes
+
+- Improved text contrast in the bookmarks/Marks rail and Settings theme cards so labels remain readable in light and dark mode.
+- Moved the Pages dropdown, page label, and marks rail slightly lower so they no longer sit underneath document tabs.
+- Stabilised fast writing by invalidating stale overlay redraws during live ink, batching live stroke painting to animation frames, and avoiding page re-renders while an ink gesture is active.
+- Loosened Apple Pencil touch detection for iPad so narrow high-confidence Pencil touches are less likely to be mistaken for finger panning.
+- Added iPad canvas CSS stability hints without changing drawing tools, saving, selection, or document behaviour.
+- Reviewed the v66 code path and did not remove any code that may still support existing functionality.

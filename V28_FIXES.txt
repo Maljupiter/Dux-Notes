@@ -1,0 +1,5 @@
+
+Dux Notes v28
+- Cleaned bottom bar only.
+- Kept all working features unchanged.
+- Made Scratch, Dux AI, page indicator, tip and zoom stay in one stable row.

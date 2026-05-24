@@ -1,0 +1,13 @@
+V80 fixes
+
+- Large accessibility mode now keeps the right tool rail scrollable, so lower tool buttons remain reachable on shorter iPad/laptop screens.
+- Anki import now accepts the file picker without extension restrictions and decodes modern zstd-compressed .apkg packages in both browser/Vercel builds and the desktop Electron app.
+- Added a desktop zstd decode bridge through Electron as a second safe path for modern collection.anki21b packages.
+- Replaced the Dux AI backend route from Gemini to Groq's OpenAI-compatible chat completions API, using GROQ_API_KEY and GROQ_MODEL.
+- Kept the existing frontend /api/dux-ai response shape so flashcards, study schedule generation and Dux AI chat do not need a UI rewrite.
+
+Checks run:
+- node -c api/dux-ai.js && node -c electron/main.cjs && node -c electron/preload.cjs
+- zstd decode check against the user's modern .apkg collection.anki21b
+- npx tsc --noEmit --pretty false
+- npm run build

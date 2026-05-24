@@ -1,0 +1,10 @@
+V46 UI polish fixes
+
+- Fixed the starter screen bottom bar so it stays anchored at the bottom of the workspace.
+- Removed the folder-panel Add flashcard shortcut.
+- Removed the right-toolbar inline Blank page, Space below and PNG page text buttons.
+- Removed Blank page and Delete page from the More menu because those actions already live in the bottom bar.
+- Kept Space below and PNG page inside More.
+- Reduced the bottom bar height by roughly ten percent.
+- Fixed the right-side settings panel so Pen colour, Highlighter colour and Eraser controls are not clipped.
+- Kept the existing PDF, drawing, AI, flashcard, study schedule, notebook storage and iPad touch logic unchanged.

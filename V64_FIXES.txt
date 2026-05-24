@@ -1,0 +1,13 @@
+V64 fixes
+
+- Improved iPad stylus capture so active Pencil-like input can continue drawing even when Safari reports touch-style pointer events or no mouse button state during movement.
+- Added safe pointer capture fallback for fast Pencil handoff on Safari.
+- Changed page thumbnails into a Pages dropdown so users only see the page list when they ask for it.
+- Recentered the writing surface in the canvas now that the page rail no longer needs permanent space.
+
+Verification
+
+- npm install
+- ./node_modules/.bin/tsc --noEmit --pretty false
+- npm run build
+- Browser load/DOM check reached the app with no console errors; browser click automation timed out during deeper interaction QA.

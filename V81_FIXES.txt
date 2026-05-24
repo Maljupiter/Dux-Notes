@@ -1,0 +1,9 @@
+Version 81 fixes
+
+- Anki imports now keep attached image media when the .apkg package includes those files, and imported review cards render the images on the front/back instead of showing long "[Image: paste-...]" placeholder text.
+- If an Anki image cannot be recovered from the package, the old image placeholder is stripped so answers stay readable.
+- The free Study schedule generator now accepts timetable/study uploads (PDF, CSV, TXT, ICS, JSON, Markdown) and sends the extracted schedule text into the existing AI and offline planning pipeline.
+- Dux AI now sends current-page context to the backend: readable PDF text, selected text, typed text boxes, and a summary of page objects.
+- The Groq backend now treats current-page text as the source for "complete this question" and "mark this working" requests, with explicit anti-hallucination instructions for scanned pages or unreadable handwriting.
+- The Groq backend default model now uses llama-3.3-70b-versatile instead of the deprecated deepseek-r1-distill-llama-70b, with openai/gpt-oss-120b as the fallback.
+- Flashcard review cards now constrain long text and imported images so the card view stays readable.

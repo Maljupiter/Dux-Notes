@@ -1,0 +1,8 @@
+Version 84 fixes
+
+- Dux AI is now a movable, resizable floating panel. Drag the header to move it and drag the lower-right corner to resize it.
+- User and assistant Dux AI messages now store a sent time; the time appears at the bottom-right of each chat bubble.
+- Selected images can now be removed with Backspace or Delete even when they are selected through the image-specific selection path.
+- Dux AI now sends a higher-resolution current-page image for visual OCR and uses stricter marking instructions for handwriting and circled answers.
+- PDF export now reports the actual export error in the save-failed prompt instead of only saying to check the terminal.
+- PDF export handles inserted JPEG images directly instead of trying to embed every image as PNG.

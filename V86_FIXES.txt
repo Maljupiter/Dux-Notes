@@ -1,0 +1,7 @@
+V86 fixes
+
+- Made Dux AI marking stricter and more HSC-style, with visible-answer transcription, criteria, evidence, mark allocation, lost marks and an improved response.
+- Made live pen and highlighter drawing lighter while writing by using a faster live-ink path, while keeping the saved stroke smoothing after the pen lifts.
+- Changed scribble erase so it only triggers when the user scribbles over a stroke, holds the pen still at the end for half a second, then lifts.
+- Updated the first-time tutorial with a scribble-erase step and matching tool animation.
+- Updated the Help screen with the latest writing, AI marking, iPad gesture, flashcard, schedule, tag, accessibility and maths toolkit guidance.

@@ -1,0 +1,14 @@
+V62 fixes
+
+- Updated the final onboarding step so it highlights the visible floating bottom controls instead of the old full-width bottom bar area.
+- Added a short DN intro animation before the welcome tutorial card appears.
+- Added an Exit button to the completion screen so users can leave the tutorial without importing or creating a PDF.
+- Changed the image rotation handle to rotate freely and only snap when it is within two degrees of 0, 90, 180, 270 or 360 degrees.
+- Renamed the document label UI to tags and added custom tags such as Exam through the tag picker.
+
+Verification
+
+- npm install
+- ./node_modules/.bin/tsc --noEmit --pretty false
+- npm run build
+- Source checks for onboarding, bottom control highlight, rotation snapping, tag wording, and custom tag controls.

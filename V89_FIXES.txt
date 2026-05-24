@@ -1,0 +1,13 @@
+v89 updates
+
+- Added Copy answer, Export answer and Minimise/Maximise controls to each Dux AI answer.
+- Added Dux AI zoom levels for easier reading of long working and maths responses.
+- Made the Dux AI floating window draggable from the panel, with guarded controls so buttons and inputs still work.
+- Added four-corner resize handles with the same minimum window size guard as before.
+- Tightened the Groq prompt so follow-up messages answer the latest user request instead of repeating the previous response.
+- Improved the OCR prompt around handwriting, trig, fractions, vectors, exponents and conservative HSC marking.
+
+Verification:
+
+- node --check api/dux-ai.js
+- npm run build

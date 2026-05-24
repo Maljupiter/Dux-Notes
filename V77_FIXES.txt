@@ -1,0 +1,14 @@
+V77 fixes
+
+- Raised study-session notifications above the full app chrome so banners appear over the top bar, sidebar, canvas and right toolbar.
+- Added native Web Notification support for study reminders when the browser/Electron app has notification permission.
+- Reworked the save-failure state into a true full-screen red blur overlay with its own clear Save PDF copy action.
+- Hardened Electron PDF export so failed save dialogs or blocked target folders fall back to a uniquely named PDF in Downloads.
+- Stabilised Cartesian plane selection at high zoom by ignoring tiny click jitter until the pointer actually moves.
+- Reduced autosave churn by updating saved documents in place instead of reordering the library during every save.
+
+Verification:
+- npx tsc --noEmit --pretty false
+- npm run build
+- node --check electron/main.cjs
+- Browser smoke test: app loaded without console errors, Study schedule opened, Maths panel inserted a Cartesian plane, and clicking the selected plane kept the selection visible.

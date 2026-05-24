@@ -1,0 +1,8 @@
+V88 changes
+
+- Added Dux AI chat tabs. Opening Dux AI creates a chat tab for the current document only when that document actually uses AI.
+- Added new chat and delete chat controls, with each tab keeping its own message history and returning to the bottom when reopened.
+- Scoped Dux AI page vision to the visible zoomed-in viewport by default, while still using the full page when the user asks for all questions or the whole page.
+- Improved Dux AI maths display so step headings, formula lines and working lines render more clearly in the chat panel.
+- Added stricter HSC-style marking instructions based on NESA marking principles, including visible-evidence marking and criteria-based mark tables.
+- Kept the existing floating, draggable and resizable Dux AI window behaviour.

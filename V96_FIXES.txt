@@ -1,0 +1,15 @@
+V96 - Cursor zoom, scribble erase and live ink speed
+
+- Fixed cursor/finger centred zoom so mouse-wheel zoom, pinch zoom and the bottom zoom control preserve the page point under the cursor instead of jumping back to an earlier page.
+- The zoom anchor now tracks the real page under the pointer and restores the viewport after layout settles, which is more reliable in long PDFs with page gaps and page labels.
+- Made pinch zoom on iPad start earlier so two-finger expanding/contracting does not pan first and then snap into zoom.
+- Removed the hard zigzag-count requirement for scribble-to-erase. A small scribble held for 0.33 seconds can erase as long as it actually touches the target stroke.
+- Kept scribble-to-erase strict about contact, and skipped erase detection when a held stroke is being snapped into a clean straight line or circle.
+- Improved live pen and highlighter response by caching the active canvas geometry during the stroke and by keeping more coalesced Pencil points in the live preview.
+- Reduced pointer-move work while writing by avoiding annotation reads except for tools that actually need them during the drag.
+
+Verification:
+- TypeScript check passed with npx tsc --noEmit.
+- Production web build passed with npm run build.
+- Electron main and preload syntax checks passed.
+- Browser smoke test confirmed the app loads, a blank PDF can be created, the pen can draw without triggering the save-failed overlay, and no console errors or warnings appeared.

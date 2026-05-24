@@ -1,0 +1,8 @@
+V66 fixes
+
+- Removed the permanent red document-card action zone and made card actions small hover/focus controls.
+- Increased sidebar/card depth separation so library cards stay readable against the sidebar.
+- Reworked Study schedule, Flashcards, document tabs, top bar buttons, search, page paper, right rail icons, and library tabs with tighter neumorphic shadows.
+- Reduced the bottom bar glow so the clock and tip controls no longer look like the light is bleeding outward.
+- Slightly reduced tool/control corner rounding to make the UI feel less artificially pill-shaped.
+- Kept app functionality, saving, drawing tools, document logic, and layout structure unchanged.

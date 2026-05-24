@@ -1,0 +1,17 @@
+v90 updates
+
+- Strengthened Dux AI visual OCR guidance for stacked fractions, numerator/denominator grouping, norm bars and dot products.
+- Raised the viewport crop resolution sent to Dux AI so small visible maths details survive compression better.
+- Smoothed zoom by scaling live page canvases immediately and repainting the heavy PDF/page backing render after zoom settles.
+- Moved the secondary tool settings surface out of the accessibility-sized right rail clipping context.
+- Added a floating right-toolbar label that remains visible for hover/focus with Compact and Large button sizing.
+
+Handwriting calibration note:
+
+- A compulsory handwriting drill was not added because the current OCR request does not train or adapt a personal handwriting model from stored practice strokes. It would add onboarding friction without a reliable accuracy gain.
+
+Verification:
+
+- node --check api/dux-ai.js
+- npm run build
+- Browser DOM checks for Compact and Large tool settings visibility

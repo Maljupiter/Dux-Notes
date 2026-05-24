@@ -1,0 +1,14 @@
+V61 fixes
+
+- Removed the extra image-lock tip from selected-image settings so the secondary toolbar fits the widget cleanly.
+- Changed image rotation actions and the rotation handle to snap in 90 degree steps.
+- Optimised live pen/highlighter drawing by drawing new stroke segments directly to the overlay canvas during pointer movement.
+- Restyled the lasso secondary toolbar to match the other secondary toolbars and kept its filter buttons selectable.
+- Added a first-time onboarding tutorial with spotlight steps, Help page restart, completion actions, and localStorage persistence.
+
+Verification
+
+- npm install
+- npx tsc --noEmit --pretty false
+- npm run build
+- Browser QA: first-run onboarding, Help restart tutorial, lasso filters, iPad-size secondary toolbar, and console error check.

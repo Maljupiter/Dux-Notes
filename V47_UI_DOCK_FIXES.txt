@@ -1,0 +1,9 @@
+Dux Notes v47 UI dock fixes
+
+Focused changes only:
+- Centred the starter welcome card in the main workspace.
+- Removed the large full-width bottom strip from the starter view and normal workspace.
+- Converted the middle bottom controls into a small floating dock 2px from the bottom edge.
+- Kept the time and tip controls in their current left position, but visually separated from the middle dock.
+- Kept the document status separate on the lower-right side.
+- Did not change tool behaviour, drawing, PDF logic, Dux AI, flashcards, study schedule, storage or iPad touch handling.

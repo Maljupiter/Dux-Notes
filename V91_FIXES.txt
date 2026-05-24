@@ -1,0 +1,12 @@
+v91 updates
+
+- Routed Dux AI chat turns by intent so page screenshots are only captured for explicit page, viewport, handwriting, marking or numbered-question requests.
+- Kept corrections and re-evaluations anchored to the earlier chat history instead of silently substituting whatever page is currently visible.
+- Added backend guidance for previous-answer corrections, chat-history follow-ups and ordinary conversation turns.
+- Answered simple greetings, thanks and capability questions locally so messages such as "hi Dux" do not waste a Groq request or page OCR pass.
+
+Verification:
+
+- node --check api/dux-ai.js
+- npm run build
+- Browser check: opened the Dux AI panel and verified "hy dux" returns the local conversational reply in chat

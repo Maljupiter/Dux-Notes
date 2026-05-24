@@ -1,0 +1,16 @@
+v93 stability and PDF save fixes
+
+- Kept the v92 fixes: restored the secondary tool settings panel surface, faster PDF export, and Dux AI prior-question memory.
+- Stabilised the Electron desktop process so renderer crashes are logged and the app window attempts a safe reload instead of staying dead.
+- Made the desktop PDF save path atomic so a crash or interruption cannot leave a half-written PDF.
+- Made Save PDF write the PDF first, then write the editable sidecar in the background so a large sidecar cannot block or fail the actual PDF copy.
+- Stopped sending the original PDF through renderer IPC for desktop sidecars; the desktop process attaches the original PDF directly when writing the sidecar.
+- Switched desktop PDF reads and Anki decompression results from giant number arrays to ArrayBuffer payloads to reduce memory pressure and improve stability.
+- Serialised local library writes and made library saves atomic to reduce corruption/race risks from rapid autosaves.
+
+Verified:
+- node --check electron/main.cjs
+- node --check electron/preload.cjs
+- npm run build
+- npm run build:mac
+- Browser smoke test: app loads, Create PDF works, Pen secondary settings panel has a real background, Save PDF completes with "Saved PDF and editable sidecar to your computer."

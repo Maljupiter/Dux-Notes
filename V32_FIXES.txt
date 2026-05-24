@@ -1,0 +1,8 @@
+V32 targeted fixes
+- Kept non-AI app systems untouched.
+- Made the lightbulb useful with stronger study tips and quick actions for Dux AI and Study schedule.
+- Improved local Dux AI greetings, follow-up handling, answer checking guidance, Maths equation support, and HSC subject guidance.
+- Expanded local flashcard generation for Studies of Religion I, Maths Advanced, Extension 1, Extension 2, English Advanced, Chemistry and Physics-oriented HSC study prompts.
+- Replaced weak generic flashcard wording with clearer HSC-style definition, application and exam-trap prompts.
+- Improved Study schedule generator parsing for named days and timeslots.
+- npm run build and npx tsc --noEmit passed.
