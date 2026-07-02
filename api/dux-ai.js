@@ -2,11 +2,46 @@ const MAX_MESSAGES = 24;
 const MAX_MESSAGE_CHARS = 4000;
 const MAX_REQUEST_BODY_CHARS = 4500000;
 const MAX_IMAGE_DATA_URL_CHARS = 3500000;
-const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
-const DEFAULT_FALLBACK_MODEL = 'openai/gpt-oss-120b';
-const DEFAULT_VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
-const DEFAULT_VISION_FALLBACK_MODEL = '';
+// Groq catalog as of July 2026: llama-3.3-70b-versatile is deprecated
+// (shutdown 2026-08-16) and llama-4-scout is deprecated (shutdown 2026-07-17).
+// Groq's recommended replacements are openai/gpt-oss-120b and qwen/qwen3.6-27b;
+// qwen3.6-27b is the production vision model.
+const DEFAULT_MODEL = 'openai/gpt-oss-120b';
+const DEFAULT_FALLBACK_MODEL = 'qwen/qwen3.6-27b';
+const DEFAULT_VISION_MODEL = 'qwen/qwen3.6-27b';
+const DEFAULT_VISION_FALLBACK_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
 const GROQ_CHAT_COMPLETIONS_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+// Groq model IDs must include their provider prefix. Env vars set without the
+// prefix (a common Vercel setup mistake) are corrected here instead of 404ing.
+const GROQ_MODEL_ID_ALIASES = {
+  'gpt-oss-120b': 'openai/gpt-oss-120b',
+  'gpt-oss-20b': 'openai/gpt-oss-20b',
+  'llama-4-scout-17b-16e-instruct': 'meta-llama/llama-4-scout-17b-16e-instruct',
+  'llama-4-maverick-17b-128e-instruct': 'meta-llama/llama-4-maverick-17b-128e-instruct',
+  'llama-guard-4-12b': 'meta-llama/llama-guard-4-12b',
+  'qwen3-32b': 'qwen/qwen3-32b',
+  'qwen3.6-27b': 'qwen/qwen3.6-27b',
+  'kimi-k2-instruct': 'moonshotai/kimi-k2-instruct'
+};
+
+function normaliseGroqModelId(value) {
+  const trimmed = typeof value === 'string' ? value.trim() : '';
+  if (!trimmed) return '';
+  return GROQ_MODEL_ID_ALIASES[trimmed.toLowerCase()] || trimmed;
+}
+
+function isModelNotUsableError(error) {
+  if (!error) return false;
+  if (error.status === 400 || error.status === 404) return true;
+  const message = typeof error.message === 'string' ? error.message.toLowerCase() : '';
+  return message.includes('model') && (
+    message.includes('not found') ||
+    message.includes('does not exist') ||
+    message.includes('decommissioned') ||
+    message.includes('deprecated')
+  );
+}
 
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -423,34 +458,41 @@ async function callGroqText({ apiKey, model, systemPrompt, userPrompt, messages,
   }
 }
 
-async function callConfiguredTextModel(options) {
-  const primaryModel = String(process.env.GROQ_MODEL || DEFAULT_MODEL).trim() || DEFAULT_MODEL;
-  const fallbackModel = String(process.env.GROQ_FALLBACK_MODEL || DEFAULT_FALLBACK_MODEL).trim();
-  try {
-    return await callGroqText({ ...options, imageDataUrl: '', model: primaryModel });
-  } catch (error) {
-    const canFallback = fallbackModel
-      && fallbackModel !== primaryModel
-      && error
-      && (error.status === 400 || error.status === 404);
-    if (!canFallback) throw error;
-    return await callGroqText({ ...options, imageDataUrl: '', model: fallbackModel });
+async function callGroqTextWithModelChain(options, candidateModels) {
+  const models = [];
+  for (const candidate of candidateModels) {
+    const model = normaliseGroqModelId(candidate);
+    if (model && !models.includes(model)) models.push(model);
   }
+
+  let lastError = null;
+  for (let index = 0; index < models.length; index += 1) {
+    try {
+      return await callGroqText({ ...options, model: models[index] });
+    } catch (error) {
+      lastError = error;
+      const hasNextModel = index < models.length - 1;
+      if (!hasNextModel || !isModelNotUsableError(error)) throw error;
+    }
+  }
+  throw lastError || new Error('No usable Groq model is configured.');
+}
+
+async function callConfiguredTextModel(options) {
+  return callGroqTextWithModelChain({ ...options, imageDataUrl: '' }, [
+    process.env.GROQ_MODEL || DEFAULT_MODEL,
+    process.env.GROQ_FALLBACK_MODEL || DEFAULT_FALLBACK_MODEL,
+    DEFAULT_MODEL,
+    DEFAULT_FALLBACK_MODEL
+  ]);
 }
 
 async function callConfiguredVisionOcr(options) {
-  const visionModel = String(process.env.GROQ_VISION_MODEL || DEFAULT_VISION_MODEL).trim() || DEFAULT_VISION_MODEL;
-  const fallbackVisionModel = String(process.env.GROQ_VISION_FALLBACK_MODEL || DEFAULT_VISION_FALLBACK_MODEL).trim();
-  try {
-    return await callGroqText({ ...options, model: visionModel });
-  } catch (error) {
-    const canFallback = fallbackVisionModel
-      && fallbackVisionModel !== visionModel
-      && error
-      && (error.status === 400 || error.status === 404);
-    if (!canFallback) throw error;
-    return await callGroqText({ ...options, model: fallbackVisionModel });
-  }
+  return callGroqTextWithModelChain(options, [
+    process.env.GROQ_VISION_MODEL || DEFAULT_VISION_MODEL,
+    process.env.GROQ_VISION_FALLBACK_MODEL || DEFAULT_VISION_FALLBACK_MODEL,
+    DEFAULT_VISION_MODEL
+  ]);
 }
 
 function latestUserTextFromMessages(messages, userPrompt) {
@@ -627,10 +669,10 @@ module.exports = async function handler(req, res) {
         route: '/api/dux-ai',
         provider: 'groq',
         configured: Boolean(process.env.GROQ_API_KEY),
-        model: process.env.GROQ_MODEL || DEFAULT_MODEL,
-        fallbackModel: process.env.GROQ_FALLBACK_MODEL || DEFAULT_FALLBACK_MODEL,
-        visionModel: process.env.GROQ_VISION_MODEL || DEFAULT_VISION_MODEL,
-        visionFallbackModel: process.env.GROQ_VISION_FALLBACK_MODEL || DEFAULT_VISION_FALLBACK_MODEL
+        model: normaliseGroqModelId(process.env.GROQ_MODEL) || DEFAULT_MODEL,
+        fallbackModel: normaliseGroqModelId(process.env.GROQ_FALLBACK_MODEL) || DEFAULT_FALLBACK_MODEL,
+        visionModel: normaliseGroqModelId(process.env.GROQ_VISION_MODEL) || DEFAULT_VISION_MODEL,
+        visionFallbackModel: normaliseGroqModelId(process.env.GROQ_VISION_FALLBACK_MODEL) || DEFAULT_VISION_FALLBACK_MODEL
       });
       return;
     }

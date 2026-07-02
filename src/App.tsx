@@ -6722,9 +6722,29 @@ function formatChatMessageTime(value?: string) {
   return date.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
 }
 
+const DUX_AI_PRODUCTION_ENDPOINT = 'https://dux-notes.vercel.app/api/dux-ai';
+
 function getDuxAiEndpoint() {
   const configured = import.meta.env.VITE_DUX_AI_API_URL?.trim();
-  return configured || '/api/dux-ai';
+  if (configured) return configured;
+  // A relative /api path only works when the app is served over http(s) by
+  // Vercel. The packaged Electron build loads dist/index.html over file://,
+  // where a relative fetch can never reach the backend.
+  if (typeof window !== 'undefined' && !/^https?:$/.test(window.location.protocol)) {
+    return DUX_AI_PRODUCTION_ENDPOINT;
+  }
+  return '/api/dux-ai';
+}
+
+function describeDuxAiFailure(error: unknown) {
+  if (error instanceof DOMException && error.name === 'AbortError') {
+    return 'the request timed out after 30 seconds';
+  }
+  const message = error instanceof Error ? error.message.trim() : '';
+  if (!message || /failed to fetch|load failed|networkerror/i.test(message)) {
+    return `the backend at ${getDuxAiEndpoint()} could not be reached (offline, blocked or not deployed)`;
+  }
+  return `the backend said: ${message.slice(0, 300)}`;
 }
 
 type DuxAiChatAnswer = {
@@ -14892,7 +14912,11 @@ export default function App() {
 
   function getCoalescedCanvasPoints(event: ReactPointerEvent<HTMLCanvasElement>, canvas: HTMLCanvasElement): Point[] {
     const nativeEvent = event.nativeEvent as PointerEvent & { getCoalescedEvents?: () => PointerEvent[] };
-    const events = typeof nativeEvent.getCoalescedEvents === 'function' ? nativeEvent.getCoalescedEvents() : [nativeEvent];
+    // getCoalescedEvents() can legally return an empty list (always does for
+    // untrusted events, and some browsers do for real pen input). Fall back to
+    // the event itself so the stroke never silently loses its points.
+    const coalesced = typeof nativeEvent.getCoalescedEvents === 'function' ? nativeEvent.getCoalescedEvents() : [];
+    const events = coalesced.length ? coalesced : [nativeEvent];
     const rect = activePointerCanvasRectRef.current || canvas.getBoundingClientRect();
     const pointZoom = activePointerCanvasRectRef.current ? activePointerZoomRef.current : zoom;
     return events.map((item) => getCanvasPointFromRect(item.clientX, item.clientY, rect, pointZoom, item.pressure || event.pressure || 0.5));
@@ -16667,7 +16691,7 @@ Answer: **x = ${formatNumber(r1)}** or **x = ${formatNumber(r2)}**.`;
       const offlineAnswer = buildDuxAiResponse(text, nextHistory);
       const answer = `${offlineAnswer}
 
-Offline note: I could not reach the Groq backend, so I used the built-in Dux AI helper for this reply.`;
+Offline note: I could not reach the Groq backend, so I used the built-in Dux AI helper for this reply. Reason: ${describeDuxAiFailure(error)}.`;
       updateAiChatTabMessages(tabId, (messages) => [...messages.slice(-AI_CHAT_MEMORY_LIMIT + 1), { id: makeId(), role: 'assistant', text: answer, createdAt: new Date().toISOString() }]);
     } finally {
       setAiChatTyping(false);

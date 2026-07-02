@@ -1,0 +1,29 @@
+V97 - Groq backend connection fixes
+
+Root cause found for "I could not reach the Groq backend":
+- The live Vercel deployment at https://dux-notes.vercel.app/api/dux-ai responds, but GROQ_API_KEY is NOT set in the Vercel project environment variables, so every AI request returns 500 "Groq is not configured".
+- The Vercel project also has GROQ_MODEL / GROQ_FALLBACK_MODEL / GROQ_VISION_MODEL env vars set to invalid Groq model IDs (gpt-oss-120b, qwen3.6-27b, llama-4-scout-17b-16e-instruct). Groq model IDs need their provider prefix, e.g. openai/gpt-oss-120b and meta-llama/llama-4-scout-17b-16e-instruct.
+- See GROQ_BACKEND_SETUP.txt for the exact fix steps in Vercel.
+
+Code fixes in this version:
+
+Backend (api/dux-ai.js):
+- Updated default models to Groq's July 2026 catalog: text uses openai/gpt-oss-120b with qwen/qwen3.6-27b as fallback, and vision OCR uses qwen/qwen3.6-27b (the production vision model). The old defaults are deprecated on Groq: llama-3.3-70b-versatile shuts down 2026-08-16 and meta-llama/llama-4-scout-17b-16e-instruct shuts down 2026-07-17.
+- Model IDs from environment variables are now normalised: known unprefixed IDs (gpt-oss-120b, llama-4-scout-17b-16e-instruct, qwen3-32b, etc.) are auto-corrected to their full Groq IDs, so the current Vercel env vars stop causing 404s.
+- Replaced the single primary->fallback model hop with a resilient model chain: configured model -> configured fallback -> built-in default -> built-in default fallback. Any model that returns 400/404 or a "model not found / decommissioned / deprecated" error moves to the next candidate instead of failing the whole request. Real errors (bad API key, rate limit, timeout) still surface immediately.
+- The GET /api/dux-ai health check now reports the normalised model IDs that will actually be sent to Groq.
+
+Frontend (src/App.tsx):
+- Fixed a stroke-registration bug: getCoalescedEvents() can legally return an empty list on some devices/browsers, and when it did the pen/highlighter/eraser move handler collected zero points, so the whole stroke silently vanished on pen-up. The code now falls back to the event itself, so strokes always keep their points. This also improves Apple Pencil consistency.
+- The offline note now explains WHY the backend failed, quoting the backend error (for example "Groq is not configured. Add GROQ_API_KEY in Vercel environment variables, then redeploy."), a timeout note, or an unreachable-endpoint note with the URL it tried. Previously the reason was silently hidden in the console.
+- The packaged Electron desktop app now falls back to the production endpoint https://dux-notes.vercel.app/api/dux-ai when no VITE_DUX_AI_API_URL was baked in at build time. The desktop build loads dist/index.html over file://, where the old relative /api/dux-ai fallback could never reach a server. VITE_DUX_AI_API_URL still takes priority when set.
+
+No tool, canvas, storage, export or UI behaviour was changed in this version.
+
+Verification:
+- TypeScript check passed with npx tsc --noEmit.
+- Production web build passed with npm run build.
+- Electron main and preload syntax checks passed with node --check.
+- api/dux-ai.js syntax check passed and the model-chain/normalisation logic was unit-exercised with a local harness (unprefixed IDs are corrected; invalid IDs fall through to working defaults; non-model errors are not retried).
+- Browser smoke test on the built app: app loads, blank PDF creation, pen/highlighter strokes, erasers, scribble-to-erase, zoom slider, save/export, Dux AI panel, flashcards and study schedule modals, no console errors, no save-failed overlay while writing.
+- Live backend check: GET https://dux-notes.vercel.app/api/dux-ai returns configured:false, confirming the missing GROQ_API_KEY is the deployment-side blocker. After you add the key in Vercel and redeploy, POST requests will go through.

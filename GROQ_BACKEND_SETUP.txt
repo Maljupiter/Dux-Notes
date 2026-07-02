@@ -1,0 +1,79 @@
+HOW TO GET THE GROQ BACKEND WORKING ON VERCEL
+=============================================
+
+Diagnosis (checked 2026-07-02 against the live site):
+GET https://dux-notes.vercel.app/api/dux-ai returned:
+  "configured": false            <- GROQ_API_KEY is missing in Vercel
+  "model": "gpt-oss-120b"        <- invalid Groq ID (needs openai/ prefix)
+  "fallbackModel": "qwen3.6-27b" <- not a Groq model at all
+
+So the API route deploys fine. The only blockers are the Vercel
+environment variables.
+
+STEP 1 - Get a Groq API key
+---------------------------
+1. Go to https://console.groq.com and sign in (free account works).
+2. Open "API Keys" in the left menu.
+3. Click "Create API Key", name it dux-notes, and copy the key
+   (it starts with gsk_...). You can only see it once.
+
+STEP 2 - Add the key to Vercel
+------------------------------
+1. Go to https://vercel.com/dashboard and open the dux-notes project.
+2. Settings -> Environment Variables.
+3. Add a new variable:
+     Key:   GROQ_API_KEY
+     Value: gsk_... (the key you copied)
+     Environments: tick Production, Preview AND Development.
+   IMPORTANT: "Production" must be ticked. A key that is only set for
+   Preview does nothing for the live site.
+4. While you are there, DELETE these existing variables (they are set to
+   invalid model IDs and are not needed - the code has good defaults):
+     GROQ_MODEL
+     GROQ_FALLBACK_MODEL
+     GROQ_VISION_MODEL
+     GROQ_VISION_FALLBACK_MODEL
+   (If you prefer to keep overrides, the valid July-2026 values are:
+     GROQ_MODEL=openai/gpt-oss-120b
+     GROQ_FALLBACK_MODEL=qwen/qwen3.6-27b
+     GROQ_VISION_MODEL=qwen/qwen3.6-27b
+   Note: llama-3.3-70b-versatile is deprecated on Groq, shutdown
+   2026-08-16, and meta-llama/llama-4-scout-17b-16e-instruct is
+   deprecated, shutdown 2026-07-17. Do not use them any more.)
+
+STEP 3 - Redeploy
+-----------------
+Environment variable changes only apply to NEW deployments.
+1. Vercel dashboard -> dux-notes project -> Deployments tab.
+2. Open the "..." menu on the latest deployment -> Redeploy.
+   (Or just push a new commit to GitHub - pushing v97 does this.)
+
+STEP 4 - Verify it worked
+-------------------------
+In any browser, open:
+  https://dux-notes.vercel.app/api/dux-ai
+You should now see "configured": true.
+
+Then test a real answer from the terminal:
+  curl -X POST "https://dux-notes.vercel.app/api/dux-ai" \
+    -H "Content-Type: application/json" \
+    -d '{"messages":[{"role":"user","text":"What is 2+2?"}]}'
+You should get {"answer":"4...", ...} instead of an error.
+
+Finally open the Dux Notes site, ask Dux AI something, and confirm the
+reply no longer ends with the "Offline note".
+
+NOTES
+-----
+- The web app on Vercel uses the relative /api/dux-ai route
+  automatically - no frontend env var is needed there.
+- The Electron desktop app is built from static files, so it needs the
+  full backend URL. Either create .env.local with
+  VITE_DUX_AI_API_URL=https://dux-notes.vercel.app/api/dux-ai before
+  building, or rely on the new v97 fallback which uses that production
+  URL automatically when the app runs from file://.
+- If Vercel "Deployment Protection" is ever enabled for Production,
+  the API will return an auth page instead of JSON. Keep it disabled
+  for Production (Settings -> Deployment Protection).
+- Groq free tier has rate limits; if you hit them the app now shows the
+  real rate-limit message in the offline note instead of hiding it.

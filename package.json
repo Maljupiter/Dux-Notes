@@ -1,6 +1,6 @@
 {
   "name": "dux-notes-app",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Dux Notes, a local-first cross-platform PDF notes, study schedule, scratchpad and flashcard app.",
   "main": "electron/main.cjs",
   "author": "Dux Notes",
